@@ -5,11 +5,12 @@ from dotenv import load_dotenv
 load_dotenv()
 HUBSPOT_API_KEY = os.getenv('HUBSPOT_API_KEY')
 
-if not HUBSPOT_API_KEY:
-    raise ValueError("HUBSPOT_API_KEY environment variable is not set")
-
 def create_or_update_contact(email, name, budget, lead_type, lead_score, qualification, chat_history, user_type):
     """Create or update a contact in HubSpot CRM."""
+    if not HUBSPOT_API_KEY:
+        print("Warning: HUBSPOT_API_KEY not set. CRM integration disabled.")
+        return 200, {"status": "skipped", "message": "CRM integration disabled - API key not set"}
+        
     url = "https://api.hubapi.com/crm/v3/objects/contacts"
     headers = {
         "Authorization": f"Bearer {HUBSPOT_API_KEY}",
@@ -28,7 +29,7 @@ def create_or_update_contact(email, name, budget, lead_type, lead_score, qualifi
     search_url = "https://api.hubapi.com/crm/v3/objects/contacts/search"
     search_payload = {
         "filterGroups": [{"filters": [{"propertyName": "email", "operator": "EQ", "value": email}]}]}
-    
+    }
     try:
         search_response = requests.post(search_url, headers=headers, json=search_payload)
         search_response.raise_for_status()

@@ -8,4 +8,8 @@ services:
       - key: PYTHON_VERSION
         value: 3.9.0
       - key: FLASK_ENV
-        value: production 
+        value: production
+      - key: HUBSPOT_API_KEY
+        sync: false
+      - key: FLASK_SECRET_KEY
+        generateValue: true 
