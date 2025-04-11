@@ -1,8 +1,11 @@
-# Web Framework
+# Web Framework and Server
 Flask==3.0.2
+gunicorn==21.2.0
+Werkzeug==3.0.1
 
 # API and HTTP
 requests==2.31.0
+urllib3==2.2.1
 
 # Environment Variables
 python-dotenv==1.0.1
@@ -11,7 +14,13 @@ python-dotenv==1.0.1
 faiss-cpu==1.7.4
 numpy==1.26.4
 sentence-transformers==2.5.1
+torch
+transformers==4.38.2
 
-# Other utilities
+# Data Serialization
 pickle-mixin==1.0.2
-gunicorn
+
+# Development and Testing
+pytest==8.0.2
+black==24.2.0
+flake8==7.0.0

@@ -28,7 +28,17 @@ def create_or_update_contact(email, name, budget, lead_type, lead_score, qualifi
     }
     search_url = "https://api.hubapi.com/crm/v3/objects/contacts/search"
     search_payload = {
-        "filterGroups": [{"filters": [{"propertyName": "email", "operator": "EQ", "value": email}]}]}
+        "filterGroups": [
+            {
+                "filters": [
+                    {
+                        "propertyName": "email",
+                        "operator": "EQ",
+                        "value": email
+                    }
+                ]
+            }
+        ]
     }
     try:
         search_response = requests.post(search_url, headers=headers, json=search_payload)
