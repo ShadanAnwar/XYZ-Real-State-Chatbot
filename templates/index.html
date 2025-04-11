@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>XYZ Real Estate Chatbot</title>
+  <style>
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+    body {
+      font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+      background: linear-gradient(135deg, #1e1e2f 0%, #2a2a3d 100%);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      margin: 0;
+      color: #e0e0e0;
+    }
+    .chat-container {
+      width: 100%;
+      max-width: 700px;
+      height: 85vh;
+      background: rgba(30, 30, 46, 0.95);
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0, 0, 0, 0.3);
+      display: flex;
+      flex-direction: column;
+      overflow: hidden;
+      backdrop-filter: blur(10px);
+    }
+    .chat-header {
+      background: linear-gradient(90deg, #6b48ff 0%, #00ddeb 100%);
+      padding: 15px 20px;
+      text-align: center;
+      font-size: 1.2rem;
+      font-weight: 600;
+      color: #fff;
+      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .chat-messages {
+      flex: 1;
+      padding: 20px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 15px;
+    }
+    .message {
+      max-width: 75%;
+      padding: 12px 18px;
+      border-radius: 18px;
+      line-height: 1.5;
+      animation: fadeIn 0.3s ease-in;
+    }
+    .message.user {
+      align-self: flex-end;
+      background: #6b48ff;
+      color: #fff;
+      box-shadow: 0 2px 8px rgba(107, 72, 255, 0.3);
+    }
+    .message.bot {
+      align-self: flex-start;
+      background: #2a2a3d;
+      color: #e0e0e0;
+      border: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .chat-input {
+      display: flex;
+      padding: 15px;
+      background: rgba(20, 20, 34, 0.8);
+      border-top: 1px solid rgba(255, 255, 255, 0.1);
+    }
+    .chat-input input {
+      flex: 1;
+      padding: 12px 20px;
+      border: none;
+      border-radius: 25px;
+      background: #2a2a3d;
+      color: #e0e0e0;
+      outline: none;
+      font-size: 1rem;
+    }
+    .chat-input input::placeholder {
+      color: #888;
+    }
+    .chat-input button {
+      margin-left: 10px;
+      padding: 12px 25px;
+      border: none;
+      background: #00ddeb;
+      color: #1e1e2f;
+      border-radius: 25px;
+      cursor: pointer;
+      font-size: 1rem;
+      font-weight: 500;
+      transition: background 0.3s;
+    }
+    .chat-input button:hover {
+      background: #00b7c2;
+    }
+  </style>
+</head>
+<body>
+  <div class="chat-container">
+    <div class="chat-header">XYZ Real Estate Assistant</div>
+    <div class="chat-messages" id="chatMessages"></div>
+    <div class="chat-input">
+      <input id="chatInput" placeholder="Type your message..." onkeydown="if(event.key==='Enter') sendMessage()">
+      <button onclick="sendMessage()">Send</button>
+    </div>
+  </div>
+
+  <script>
+    const chatMessagesEl = document.getElementById('chatMessages');
+    const inputEl = document.getElementById('chatInput');
+
+    // Initialize with bot greeting
+    addMessage('Bot', 'xyz real estaste chatbot');
+
+    async function sendMessage() {
+      const text = inputEl.value.trim();
+      if (!text) return;
+
+      addMessage('You', text);
+      inputEl.value = '';
+
+      try {
+        const response = await fetch('/api/chat', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify({ message: text })
+        });
+        const data = await response.json();
+        addMessage('Bot', data.answer);
+      } catch (error) {
+        addMessage('Bot', 'Sorry, something went wrong! Let’s try again.');
+      }
+    }
+
+    function addMessage(sender, text) {
+      const msgEl = document.createElement('div');
+      msgEl.classList.add('message', sender.toLowerCase());
+      msgEl.textContent = text;
+      chatMessagesEl.appendChild(msgEl);
+      chatMessagesEl.scrollTop = chatMessagesEl.scrollHeight;
+    }
+  </script>
+</body>
+</html>
